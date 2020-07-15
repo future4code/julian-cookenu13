@@ -1,17 +1,17 @@
-import Knex from "knex"
 import {BaseDatabase} from './BaseDatabase'
 
-export class UseDataBase extends BaseDatabase{
+export class UserDataBase extends BaseDatabase{
     private static tableName = "User"
 
-    creteUser = async (id:string, email:string, password:string):Promise<void> => {
+    createUser = async (id:string, email:string, name: string, password:string):Promise<void> => {
         await this.getConnection()
         .insert({
             id,
             email,
+            name,
             password
         })
-        .into(UseDataBase.tableName)
+        .into(UserDataBase.tableName)
 
         BaseDatabase.destroyConnection()
     };
@@ -19,7 +19,7 @@ export class UseDataBase extends BaseDatabase{
         getByEmail = async (email:string):Promise<any> => {
         const result = await this.getConnection()
         .select("*")
-        .from(UseDataBase.tableName)
+        .from(UserDataBase.tableName)
         .where({email})
 
         BaseDatabase.destroyConnection()
@@ -31,7 +31,7 @@ export class UseDataBase extends BaseDatabase{
         getUserById = async (id:string) =>{
             const result = await this.getConnection()
             .select("*")
-            .from(UseDataBase.tableName)
+            .from(UserDataBase.tableName)
             .where({id})
 
             BaseDatabase.destroyConnection()
