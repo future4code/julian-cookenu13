@@ -58,6 +58,42 @@ app.post("/signup", async (req: Request, res: Response) => {
     }
 })
 
+app.post("/login", async (req:Request, res:Response) =>{
+    try{
+        if(!req.body.email || req.body.email.indexOf("@") === -1 ){
+           throw new Error("Invalid Email :(")
+
+        }
+
+        const useData = {
+            email: req.body.email,
+            password: req.body.password
+        }
+
+        const userDataBase = new UserDataBase() 
+        const user = await userDataBase.getByEmail(useData.email)
+
+        const hashManager = new HashManager()
+        const compareResult = await hashManager.compare(useData.password, user.password)
+
+        if(!compareResult){
+            throw new Error("Invalid Password")
+        }
+
+        const authenticator = new Authenticator()
+        const token = await authenticator.generateToken({id:user.id})
+
+        res.status(200).send({
+            token
+        })
+
+    } catch (err){
+        res.status(401).send({
+            massege: err.massege
+        })
+    }
+})
+
 const server = app.listen(process.env.PORT || 3303, () => {
     if(server) {
         const address = server.address() as AddressInfo;
