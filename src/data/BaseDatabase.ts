@@ -5,7 +5,7 @@ export class BaseDatabase {
     private static connection: Knex | null = null;
 
     protected getConnection(): Knex {
-        if(!BaseDatabase.connection) {
+        if (!BaseDatabase.connection) {
             BaseDatabase.connection = knex({
                 client: "mysql",
                 connection: {
@@ -22,7 +22,7 @@ export class BaseDatabase {
     }
 
     public static async destroyConnection(): Promise<void> {
-        if(BaseDatabase.connection) {
+        if (BaseDatabase.connection) {
             await BaseDatabase.connection.destroy();
             BaseDatabase.connection = null;
         }
